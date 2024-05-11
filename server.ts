@@ -29,11 +29,12 @@ app.post('/send-email', async (req: Request, res: Response, next: NextFunction) 
         interface RequestBody {
             mailSendFrom: string;
             mailSendTo: string;
+            phoneNumber?:string;
             mailSubject: string;
             mailText: string;
             html?: string;
         }
-        const { mailSendFrom, mailSendTo, mailSubject, mailText, html }: RequestBody = req.body
+        const { mailSendFrom, mailSendTo,phoneNumber, mailSubject, mailText, html , }: RequestBody = req.body
 
         if (!mailSendFrom || !mailSendTo || !mailSubject || !mailText) {
             res.status(400)
@@ -45,7 +46,7 @@ app.post('/send-email', async (req: Request, res: Response, next: NextFunction) 
             from: process.env.EMAIL!,
             to: mailSendTo,
             subject: mailSubject,
-            html: emailTemplate(mailSendFrom, mailText)
+            html: emailTemplate(mailSendFrom, mailText,phoneNumber)
         }
         await senEmail(mailOption)
         res.json({ success: true })
@@ -58,3 +59,5 @@ app.use(errorHandler)
 app.listen(port, () => {
     console.log(`server start on http://localhost:${port}/`);
 });
+
+export default app
